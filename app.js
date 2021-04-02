@@ -80,12 +80,12 @@ class Game {
 	}
 
 	illuminateColor(color) {
-		this.colores[color].classList.add('light');
+		this.colors[color].classList.add('light');
 		setTimeout(() => this.turnOffColor(color), 350);
 	}
 
 	turnOffColor(color) {
-		this.colores[color].classList.remove('light');
+		this.colors[color].classList.remove('light');
 	}
 
 	addClickEvents() {
