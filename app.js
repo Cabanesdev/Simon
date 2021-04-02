@@ -8,14 +8,14 @@ const lastLevel = 10;
 class Game {
 	constructor() {
 		this.initialize = this.initialize.bind(this);
+		this.initialize();
 		this.generateSequence();
-		this.nextLevel();
-		setTimeout(this.nextLevel, 500);
+		setTimeout(this.nextLevel(), 500);
 	}
 
 	initialize() {
 		this.nextLevel = this.nextLevel.bind(this);
-		this.chooseColor = this.chooseColor.bind(this);
+		this.chooseColors = this.chooseColors.bind(this);
 		this.toggleStartBtn();
 		this.level = 1;
 		this.colors = {
@@ -75,6 +75,7 @@ class Game {
 	illuminateSequence() {
 		for (let i = 0; i < this.level; i++) {
 			const color = this.transformNumberToColor(this.sequence[i]);
+			console.log(color);
 			setTimeout(() => this.illuminateColor(color), 1000 * i);
 		}
 	}
@@ -89,32 +90,32 @@ class Game {
 	}
 
 	addClickEvents() {
-		this.colors.lightblue.addEventListener('click', this.chooseColor);
-		this.colors.green.addEventListener('click', this.chooseColor);
-		this.colors.violet.addEventListener('click', this.chooseColor);
-		this.colors.orange.addEventListener('click', this.chooseColor);
+		this.colors.lightblue.addEventListener('click', this.chooseColors);
+		this.colors.violet.addEventListener('click', this.chooseColors);
+		this.colors.orange.addEventListener('click', this.chooseColors);
+		this.colors.green.addEventListener('click', this.chooseColors);
 	}
 
-	deleteClickEvents() {
-		this.colors.lightblue.removeEventListener('click', this.chooseColor);
-		this.colors.green.removeEventListener('click', this.chooseColor);
-		this.colors.violet.removeEventListener('click', this.chooseColor);
-		this.colors.orange.removeEventListener('click', this.chooseColor);
+	deleleClickEvents() {
+		this.colors.lightblue.removeEventListener('click', this.chooseColors);
+		this.colors.violet.removeEventListener('click', this.chooseColors);
+		this.colors.orange.removeEventListener('click', this.chooseColors);
+		this.colors.green.removeEventListener('click', this.chooseColors);
 	}
 
-	chooseColor(ev) {
-		const nameColor = ev.target.dataset.color;
-		const numberColor = this.transformColorToNumber(nameColor);
-		this.illuminateColor(nameColor);
-		if (numberColor === this.sequence[this.subLevel]) {
+	chooseColors(ev) {
+		const colorName = ev.target.dataset.color;
+		const colorNumber = this.transformColorToNumber(colorName);
+		this.illuminateColor(colorName);
+		if (colorNumber === this.sequence[this.subLevel]) {
 			this.subLevel++;
 			if (this.subLevel === this.level) {
 				this.level++;
-				this.deleteClickEvents();
+				this.deleleClickEvents();
 				if (this.level === lastLevel + 1) {
 					this.winTheGame();
 				} else {
-					setTimeout(this.nextLevel, 2000);
+					setTimeout(this.nextLevel, 1500);
 				}
 			}
 		} else {
@@ -123,21 +124,18 @@ class Game {
 	}
 
 	winTheGame() {
-		swal(
-			'Simons Says',
-			'Congratulations you have won the game',
-			'success'
-		).then(this.initialize);
+		swal('Simon Says', 'Congratulations you have won the game', 'success').then(
+			this.initialize
+		);
 	}
 
 	lostTheGame() {
-		swal('Simons Says', 'Sorry you lost the game', 'error').then(() => {
-			this.deleteClickEvents();
+		swal('Simon Says', 'Im sorry you have lost :(', 'error').then(() => {
+			this.deleleClickEvents();
 			this.initialize();
 		});
 	}
 }
-
 function startGame() {
 	window.game = new Game();
 }
